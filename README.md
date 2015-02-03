@@ -338,10 +338,10 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
   }
   ```
 
-### controllerAs with vm
+### controllerAs with _this
 ###### [Style [Y032](#style-y032)]
 
-  - Use a capture variable for `this` when using the `controllerAs` syntax. Choose a consistent variable name such as `vm`, which stands for ViewModel.
+  - Use a capture variable for `this` when using the `controllerAs` syntax.
 
   *Why?*: The `this` keyword is contextual and when used within a function inside a controller may change its context. Capturing the context of `this` avoids encountering this problem.
 
@@ -356,9 +356,9 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
   ```javascript
   /* recommended */
   function Customer() {
-      var vm = this;
-      vm.name = {};
-      vm.sendMessage = function() { };
+      var _this = this;
+      _this.name = {};
+      _this.sendMessage = function() { };
   }
   ```
 
@@ -366,23 +366,23 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
   ```javascript
   /* jshint validthis: true */
-  var vm = this;
+  var _this = this;
   ```
 
-  Note: When creating watches in a controller using `controller as`, you can watch the `vm.*` member using the following syntax. (Create watches with caution as they add more load to the digest cycle.)
+  Note: When creating watches in a controller using `controller as`, you can watch the `_this.*` member using the following syntax. (Create watches with caution as they add more load to the digest cycle.)
 
   ```html
-  <input ng-model="vm.title"/>
+  <input ng-model="_this.title"/>
   ```
 
   ```javascript
   function SomeController($scope, $log) {
-      var vm = this;
-      vm.title = 'Some Title';
+      var _this = this;
+      _this.title = 'Some Title';
 
-      $scope.$watch('vm.title', function(current, original) {
-          $log.info('vm.title was %s', original);
-          $log.info('vm.title is now %s', current);
+      $scope.$watch('_this.title', function(current, original) {
+          $log.info('_this.title was %s', original);
+          $log.info('_this.title is now %s', current);
       });
   }
   ```
@@ -399,31 +399,31 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
   ```javascript
   /* avoid */
   function Sessions() {
-      var vm = this;
+      var _this = this;
 
-      vm.gotoSession = function() {
+      _this.gotoSession = function() {
         /* ... */
       };
-      vm.refresh = function() {
+      _this.refresh = function() {
         /* ... */
       };
-      vm.search = function() {
+      _this.search = function() {
         /* ... */
       };
-      vm.sessions = [];
-      vm.title = 'Sessions';
+      _this.sessions = [];
+      _this.title = 'Sessions';
   ```
 
   ```javascript
   /* recommended */
   function Sessions() {
-      var vm = this;
+      var _this = this;
 
-      vm.gotoSession = gotoSession;
-      vm.refresh = refresh;
-      vm.search = search;
-      vm.sessions = [];
-      vm.title = 'Sessions';
+      _this.gotoSession = gotoSession;
+      _this.refresh = refresh;
+      _this.search = search;
+      _this.sessions = [];
+      _this.title = 'Sessions';
 
       ////////////
 
@@ -447,10 +447,10 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
   ```javascript
   /* avoid */
   function Sessions(data) {
-      var vm = this;
+      var _this = this;
 
-      vm.gotoSession = gotoSession;
-      vm.refresh = function() {
+      _this.gotoSession = gotoSession;
+      _this.refresh = function() {
           /**
            * lines
            * of
@@ -459,21 +459,21 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
            * readability
            */
       };
-      vm.search = search;
-      vm.sessions = [];
-      vm.title = 'Sessions';
+      _this.search = search;
+      _this.sessions = [];
+      _this.title = 'Sessions';
   ```
 
   ```javascript
   /* recommended */
   function Sessions(dataservice) {
-      var vm = this;
+      var _this = this;
 
-      vm.gotoSession = gotoSession;
-      vm.refresh = dataservice.refresh; // 1 liner is OK
-      vm.search = search;
-      vm.sessions = [];
-      vm.title = 'Sessions';
+      _this.gotoSession = gotoSession;
+      _this.refresh = dataservice.refresh; // 1 liner is OK
+      _this.search = search;
+      _this.sessions = [];
+      _this.title = 'Sessions';
   ```
 
 ### Function Declarations to Hide Implementation Details
@@ -497,9 +497,9 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
    * Using function expressions.
    */
   function Avengers(dataservice, logger) {
-      var vm = this;
-      vm.avengers = [];
-      vm.title = 'Avengers';
+      var _this = this;
+      _this.avengers = [];
+      _this.title = 'Avengers';
 
       var activate = function() {
           return getAvengers().then(function() {
@@ -509,18 +509,18 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
       var getAvengers = function() {
           return dataservice.getAvengers().then(function(data) {
-              vm.avengers = data;
-              return vm.avengers;
+              _this.avengers = data;
+              return _this.avengers;
           });
       }
 
-      vm.getAvengers = getAvengers;
+      _this.getAvengers = getAvengers;
 
       activate();
   }
   ```
 
-  Notice that the important stuff is scattered in the preceding example. In the example below, notice that the important stuff is up top. For example, the members bound to the controller such as `vm.avengers` and `vm.title`. The implementation details are down below. This is just easier to read.
+  Notice that the important stuff is scattered in the preceding example. In the example below, notice that the important stuff is up top. For example, the members bound to the controller such as `_this.avengers` and `_this.title`. The implementation details are down below. This is just easier to read.
 
   ```javascript
   /*
@@ -529,10 +529,10 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
    * and bindable members up top.
    */
   function Avengers(dataservice, logger) {
-      var vm = this;
-      vm.avengers = [];
-      vm.getAvengers = getAvengers;
-      vm.title = 'Avengers';
+      var _this = this;
+      _this.avengers = [];
+      _this.getAvengers = getAvengers;
+      _this.title = 'Avengers';
 
       activate();
 
@@ -544,8 +544,8 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
       function getAvengers() {
           return dataservice.getAvengers().then(function(data) {
-              vm.avengers = data;
-              return vm.avengers;
+              _this.avengers = data;
+              return _this.avengers;
           });
       }
   }
@@ -566,10 +566,10 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
   /* avoid */
   function Order($http, $q, config, userInfo) {
-      var vm = this;
-      vm.checkCredit = checkCredit;
-      vm.isCreditOk;
-      vm.total = 0;
+      var _this = this;
+      _this.checkCredit = checkCredit;
+      _this.isCreditOk;
+      _this.total = 0;
 
       function checkCredit() {
           var settings = {};
@@ -582,7 +582,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
               .then(function(data) {
                // Unpack JSON data in the response object
                  // to find maxRemainingAmount
-                 vm.isCreditOk = vm.total <= maxRemainingAmount
+                 _this.isCreditOk = _this.total <= maxRemainingAmount
               })
               .catch(function(error) {
                  // Interpret error
@@ -596,14 +596,14 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
   ```javascript
   /* recommended */
   function Order(creditService) {
-      var vm = this;
-      vm.checkCredit = checkCredit;
-      vm.isCreditOk;
-      vm.total = 0;
+      var _this = this;
+      _this.checkCredit = checkCredit;
+      _this.isCreditOk;
+      _this.total = 0;
 
       function checkCredit() {
-         return creditService.isOrderTotalOk(vm.total)
-      .then(function(isOk) { vm.isCreditOk = isOk; })
+         return creditService.isOrderTotalOk(_this.total)
+      .then(function(isOk) { _this.isCreditOk = isOk; })
             .catch(showServiceError);
       };
   }
@@ -621,7 +621,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
   - When a controller must be paired with a view and either component may be re-used by other controllers or views, define controllers along with their routes.
 
-    Note: If a View is loaded via another means besides a route, then use the `ng-controller="Avengers as vm"` syntax.
+    Note: If a View is loaded via another means besides a route, then use the `ng-controller="Avengers as _this"` syntax.
 
     *Why?*: Pairing the controller in the route allows different routes to invoke different pairs of controllers and views. When controllers are assigned in the view using [`ng-controller`](https://docs.angularjs.org/api/ng/directive/ngController), that view is always associated with the same controller.
 
@@ -643,7 +643,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
   ```html
   <!-- avengers.html -->
-  <div ng-controller="Avengers as vm">
+  <div ng-controller="Avengers as _this">
   </div>
   ```
 
@@ -660,7 +660,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
           .when('/avengers', {
               templateUrl: 'avengers.html',
               controller: 'Avengers',
-              controllerAs: 'vm'
+              controllerAs: '_this'
           });
   }
   ```
@@ -940,8 +940,8 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
   Avengers.$inject = ['dataservice', 'logger'];
 
   function Avengers(dataservice, logger) {
-      var vm = this;
-      vm.avengers = [];
+      var _this = this;
+      _this.avengers = [];
 
       activate();
 
@@ -954,8 +954,8 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
       function getAvengers() {
           return dataservice.getAvengers()
               .then(function(data) {
-                  vm.avengers = data;
-                  return vm.avengers;
+                  _this.avengers = data;
+                  return _this.avengers;
               });
       }
   }
@@ -1000,8 +1000,8 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
                  * Step 3
                  * set the data and resolve the promise
                  */
-                vm.avengers = data;
-                return vm.avengers;
+                _this.avengers = data;
+                return _this.avengers;
         });
   }
   ```
@@ -1209,7 +1209,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
           },
           link: linkFunc,
           controller: ExampleController,
-            controllerAs: 'vm',
+            controllerAs: 'myExample',
             bindToController: true // because the scope is isolated
         };
 
@@ -1218,8 +1218,8 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
       function linkFunc(scope, el, attr, ctrl) {
           console.log('LINK: scope.min = %s *** should be undefined', scope.min);
           console.log('LINK: scope.max = %s *** should be undefined', scope.max);
-          console.log('LINK: scope.vm.min = %s', scope.vm.min);
-          console.log('LINK: scope.vm.max = %s', scope.vm.max);
+          console.log('LINK: scope.myExample.min = %s', scope.myExample.min);
+          console.log('LINK: scope.myExample.max = %s', scope.myExample.max);
       }
   }
 
@@ -1227,22 +1227,22 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
   function ExampleController($scope) {
       // Injecting $scope just for comparison
-      var vm = this;
+      var myExample = this;
 
-      vm.min = 3;
+      myExample.min = 3;
 
-      console.log('CTRL: $scope.vm.min = %s', $scope.vm.min);
-      console.log('CTRL: $scope.vm.max = %s', $scope.vm.max);
-      console.log('CTRL: vm.min = %s', vm.min);
-      console.log('CTRL: vm.max = %s', vm.max);
+      console.log('CTRL: $scope.myExample.min = %s', $scope.myExample.min);
+      console.log('CTRL: $scope.myExample.max = %s', $scope.myExample.max);
+      console.log('CTRL: myExample.min = %s', myExample.min);
+      console.log('CTRL: myExample.max = %s', myExample.max);
   }
   ```
 
   ```html
   <!-- example.directive.html -->
   <div>hello world</div>
-  <div>max={{vm.max}}<input ng-model="vm.max"/></div>
-  <div>min={{vm.min}}<input ng-model="vm.min"/></div>
+  <div>max={{myExample.max}}<input ng-model="myExample.max"/></div>
+  <div>min={{myExample.min}}<input ng-model="myExample.min"/></div>
   ```
 
 ###### [Style [Y076](#style-y076)]
@@ -1270,7 +1270,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
               max: '='
           },
           controller: ExampleController,
-          controllerAs: 'vm',
+          controllerAs: 'myExample',
           bindToController: true
       };
 
@@ -1278,18 +1278,18 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
   }
 
   function ExampleController() {
-      var vm = this;
-      vm.min = 3;
-      console.log('CTRL: vm.min = %s', vm.min);
-      console.log('CTRL: vm.max = %s', vm.max);
+      var myExample = this;
+      myExample.min = 3;
+      console.log('CTRL: myExample.min = %s', myExample.min);
+      console.log('CTRL: myExample.max = %s', myExample.max);
   }
   ```
 
   ```html
   <!-- example.directive.html -->
   <div>hello world</div>
-  <div>max={{vm.max}}<input ng-model="vm.max"/></div>
-  <div>min={{vm.min}}<input ng-model="vm.min"/></div>
+  <div>max={{myExample.max}}<input ng-model="myExample.max"/></div>
+  <div>min={{myExample.min}}<input ng-model="myExample.min"/></div>
   ```
 
 **[Back to top](#table-of-contents)**
@@ -1310,13 +1310,13 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
   ```javascript
   /* avoid */
   function Avengers(dataservice) {
-      var vm = this;
-      vm.avengers = [];
-      vm.title = 'Avengers';
+      var _this = this;
+      _this.avengers = [];
+      _this.title = 'Avengers';
 
       dataservice.getAvengers().then(function(data) {
-          vm.avengers = data;
-          return vm.avengers;
+          _this.avengers = data;
+          return _this.avengers;
       });
   }
   ```
@@ -1324,9 +1324,9 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
   ```javascript
   /* recommended */
   function Avengers(dataservice) {
-      var vm = this;
-      vm.avengers = [];
-      vm.title = 'Avengers';
+      var _this = this;
+      _this.avengers = [];
+      _this.title = 'Avengers';
 
       activate();
 
@@ -1334,8 +1334,8 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
       function activate() {
           return dataservice.getAvengers().then(function(data) {
-              vm.avengers = data;
-              return vm.avengers;
+              _this.avengers = data;
+              return _this.avengers;
           });
       }
   }
@@ -1361,12 +1361,12 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
       .controller('Avengers', Avengers);
 
   function Avengers(movieService) {
-      var vm = this;
+      var _this = this;
       // unresolved
-      vm.movies;
+      _this.movies;
       // resolved asynchronously
       movieService.getMovies().then(function(response) {
-          vm.movies = response.movies;
+          _this.movies = response.movies;
       });
   }
   ```
@@ -1384,7 +1384,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
           .when('/avengers', {
               templateUrl: 'avengers.html',
               controller: 'Avengers',
-              controllerAs: 'vm',
+              controllerAs: '_this',
               resolve: {
                   moviesPrepService: function(movieService) {
                       return movieService.getMovies();
@@ -1400,8 +1400,8 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
   Avengers.$inject = ['moviesPrepService'];
   function Avengers(moviesPrepService) {
-        var vm = this;
-        vm.movies = moviesPrepService.movies;
+        var _this = this;
+        _this.movies = moviesPrepService.movies;
   }
   ```
 
@@ -1420,7 +1420,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
           .when('/avengers', {
               templateUrl: 'avengers.html',
               controller: 'Avengers',
-              controllerAs: 'vm',
+              controllerAs: '_this',
               resolve: {
                   moviesPrepService: moviesPrepService
               }
@@ -1438,8 +1438,8 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
   Avengers.$inject = ['moviesPrepService'];
   function Avengers(moviesPrepService) {
-        var vm = this;
-        vm.movies = moviesPrepService.movies;
+        var _this = this;
+        _this.movies = moviesPrepService.movies;
   }
   ```
     Note: The code example's dependency on `movieService` is not minification safe on its own. For details on how to make this code minification safe, see the sections on [dependency injection](#manual-annotating-for-dependency-injection) and on [minification and annotation](#minification-and-annotation).
@@ -1562,7 +1562,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
             .when('/avengers', {
                 templateUrl: 'avengers.html',
                 controller: 'Avengers',
-                controllerAs: 'vm',
+                controllerAs: '_this',
                 resolve: {
                     moviesPrepService: moviePrepService
                 }
@@ -1599,12 +1599,12 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
     /* @ngInject */
     function Avengers(storageService, avengerService) {
-        var vm = this;
-        vm.heroSearch = '';
-        vm.storeHero = storeHero;
+        var _this = this;
+        _this.heroSearch = '';
+        _this.storeHero = storeHero;
 
         function storeHero() {
-            var hero = avengerService.find(vm.heroSearch);
+            var hero = avengerService.find(_this.heroSearch);
             storageService.save(hero.name, hero);
         }
     }
@@ -1619,12 +1619,12 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
     /* @ngInject */
     function Avengers(storageService, avengerService) {
-        var vm = this;
-        vm.heroSearch = '';
-        vm.storeHero = storeHero;
+        var _this = this;
+        _this.heroSearch = '';
+        _this.storeHero = storeHero;
 
         function storeHero() {
-            var hero = avengerService.find(vm.heroSearch);
+            var hero = avengerService.find(_this.heroSearch);
             storageService.save(hero.name, hero);
         }
     }
@@ -1643,7 +1643,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
             .when('/avengers', {
                 templateUrl: 'avengers.html',
                 controller: 'Avengers',
-                controllerAs: 'vm',
+                controllerAs: '_this',
                 resolve: { /* @ngInject */
                     moviesPrepService: function(movieService) {
                         return movieService.getMovies();
@@ -1826,12 +1826,10 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
     // Controllers
     avengers.js
     avengers.controller.js
-    avengersController.js
 
-    // Services/Factories
+    // Factories
     logger.js
-    logger.service.js
-    loggerService.js
+    logger.factory.js
     ```
 
     ```javascript
@@ -1843,9 +1841,9 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
     avengers.controller.js
     avengers.controller.spec.js
 
-    // services/factories
-    logger.service.js
-    logger.service.spec.js
+    // factories
+    logger.factory.js
+    logger.factory.spec.js
 
     // constants
     constants.js
@@ -1964,7 +1962,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
      * recommended
      */
 
-    // logger.service.js
+    // logger.factory.js
     angular
         .module
         .factory('logger', logger);
@@ -2101,15 +2099,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 ### Folders-by-Feature Structure
 ###### [Style [Y152](#style-y152)]
 
-  - Create folders named for the feature they represent. When a folder grows to contain more than 7 files, start to consider creating a folder for them. Your threshold may be different, so adjust as needed.
-
-    *Why?*: A developer can locate the code, identify what each file represents at a glance, the structure is flat as can be, and there is no repetitive nor redundant names.
-
-    *Why?*: The LIFT guidelines are all covered.
-
-    *Why?*: Helps reduce the app from becoming cluttered through organizing the content and keeping them aligned with the LIFT guidelines.
-
-    *Why?*: When there are a lot of files (10+) locating them is easier with a consistent folder structures and more difficult in flat structures.
+  - Create folders named for the feature they represent.
 
     ```javascript
     /**
@@ -2120,76 +2110,40 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
         app.module.js
         app.config.js
         app.routes.js
-        components/
-            calendar.directive.js
-            calendar.directive.html
-            user-profile.directive.js
-            user-profile.directive.html
-        layout/
-            shell.html
-            shell.controller.js
-            topnav.html
-            topnav.controller.js
-        people/
-            attendees.html
-            attendees.controller.js
-            speakers.html
-            speakers.controller.js
-            speaker-detail.html
-            speaker-detail.controller.js
-        services/
-            data.service.js
-            localstorage.service.js
-            logger.service.js
-            spinner.service.js
-        sessions/
-            sessions.html
-            sessions.controller.js
-            session-detail.html
-            session-detail.controller.js
-    ```
+        assignment/
+            controller/
+                assignment-applications.controller.js
+                assignment-list.controller.js
+            directive/
+                assignment-profile.directive.js
+                assignment-list.directive.js
+            partial/
+                assignment-list.partial.html
+                assignment-profile.partial.html
+                assignment-publish.partial.html
+            factory/
+                Assignment.factory.js
+        assignment.add/
+            controller/
+                assignment-add.controller.js
+            directive/
+                assignment-add.directive.js
+            partial/
+                assignment-add.partial.js
+        candidate/
+            controller/
+                app-candidate.controller.js
+                candidate-list.controller.js
+            directive/
+                candidate-profile.directive.js
+                candidate-list.directive.js
+            partial/
+                candidate-list.partial.html
+                candidate-profile.partial.html
+                candidate-publish.partial.html
+            factory/
+                Candidate.factory.js
 
-      ![Sample App Structure](https://raw.githubusercontent.com/johnpapa/angularjs-styleguide/master/assets/modularity-2.png)
-
-      Note: Do not use structuring using folders-by-type. This requires moving to multiple folders when working on a feature and gets unwieldy quickly as the app grows to 5, 10 or 25+ views and controllers (and other features), which makes it more difficult than folder-by-feature to locate files.
-
-    ```javascript
-    /*
-    * avoid
-    * Alternative folders-by-type.
-    * I recommend "folders-by-feature", instead.
-    */
-
-    app/
-        app.module.js
-        app.config.js
-        app.routes.js
-        controllers/
-            attendees.js
-            session-detail.js
-            sessions.js
-            shell.js
-            speakers.js
-            speaker-detail.js
-            topnav.js
-        directives/
-            calendar.directive.js
-            calendar.directive.html
-            user-profile.directive.js
-            user-profile.directive.html
-        services/
-            dataservice.j
-            localstorage.js
-            logger.js
-            spinner.js
-        views/
-            attendees.html
-            session-detail.html
-            sessions.html
-            shell.html
-            speakers.html
-            speaker-detail.html
-            topnav.html
     ```
 
 **[Back to top](#table-of-contents)**
@@ -2202,13 +2156,6 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
   - Create small modules that encapsulate one responsibility.
 
     *Why?*: Modular applications make it easy to plug and go as they allow the development teams to build vertical slices of the applications and roll out incrementally. This means we can plug in new features as we develop them.
-
-### Create an App Module
-###### [Style [Y161](#style-y161)]
-
-  - Create an application root module whose role is pull together all of the modules and features of your application. Name this for your application.
-
-    *Why?*: AngularJS encourages modularity and separation patterns. Creating an application root module whose role is to tie your other modules together provides a very straightforward way to add or remove modules from your application.
 
 ### Keep the App Module Thin
 ###### [Style [Y162](#style-y162)]
@@ -2365,11 +2312,7 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
 ### Testing Library
 ###### [Style [Y191](#style-y191)]
 
-  - Use [Jasmine](http://jasmine.github.io/) or [Mocha](http://mochajs.org) for unit testing.
-
-    *Why?*: Both Jasmine and Mocha are widely used in the AngularJS community. Both are stable, well maintained, and provide robust testing features.
-
-    Note: When using Mocha, also consider choosing an assert library such as [Chai](http://chaijs.com).
+  - Use [Jasmine](http://jasmine.github.io/) for unit testing.
 
 ### Test Runner
 ###### [Style [Y192](#style-y192)]
@@ -2384,30 +2327,10 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
 
     *Why?*: Karma works well with task automation leaders such as [Grunt](http://www.gruntjs.com) (with [grunt-karma](https://github.com/karma-runner/grunt-karma)) and [Gulp](http://www.gulpjs.com) (with [gulp-karma](https://github.com/lazd/gulp-karma)).
 
-### Stubbing and Spying
-###### [Style [Y193](#style-y193)]
-
-  - Use [Sinon](http://sinonjs.org/) for stubbing and spying.
-
-    *Why?*: Sinon works well with both Jasmine and Mocha and extends the stubbing and spying features they offer.
-
-    *Why?*: Sinon makes it easier to toggle between Jasmine and Mocha, if you want to try both.
-
-### Headless Browser
-###### [Style [Y194](#style-y194)]
-
-  - Use [PhantomJS](http://phantomjs.org/) to run your tests on a server.
-
-    *Why?*: PhantomJS is a headless browser that helps run your tests without needing a "visual" browser. So you do not have to install Chrome, Safari, IE, or other browsers on your server.
-
-    Note: You should still test on all browsers in your environment, as appropriate for your target audience.
-
 ### Code Analysis
 ###### [Style [Y195](#style-y195)]
 
-  - Run JSHint on your tests.
-
-    *Why?*: Tests are code. JSHint can help identify code quality issues that may cause the test to work improperly.
+  - Run JSHint.
 
 ### Alleviate Globals for JSHint Rules on Tests
 ###### [Style [Y196](#style-y196)]
@@ -2448,39 +2371,6 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
                              /customers.route.js
                              /customers.route.spec.js
     ```
-
-**[Back to top](#table-of-contents)**
-
-## Animations
-
-### Usage
-###### [Style [Y210](#style-y210)]
-
-  - Use subtle [animations with AngularJS](https://docs.angularjs.org/guide/animations) to transition between states for views and primary visual elements. Include the [ngAnimate module](https://docs.angularjs.org/api/ngAnimate). The 3 keys are subtle, smooth, seamless.
-
-    *Why?*: Subtle animations can improve User Experience when used appropriately.
-
-    *Why?*: Subtle animations can improve perceived performance as views transition.
-
-### Sub Second
-###### [Style [Y211](#style-y211)]
-
-  - Use short durations for animations. I generally start with 300ms and adjust until appropriate.
-
-    *Why?*: Long animations can have the reverse affect on User Experience and perceived performance by giving the appearance of a slow application.
-
-### animate.css
-###### [Style [Y212](#style-y212)]
-
-  - Use [animate.css](http://daneden.github.io/animate.css/) for conventional animations.
-
-    *Why?*: The animations that animate.css provides are fast, smooth, and easy to add to your application.
-
-    *Why?*: Provides consistency in your animations.
-
-    *Why?*: animate.css is widely used and tested.
-
-    Note: See this [great post by Matias Niemelä on AngularJS animations](http://www.yearofmoo.com/2013/08/remastered-animation-in-angularjs-1-2.html)
 
 **[Back to top](#table-of-contents)**
 
@@ -2711,32 +2601,6 @@ Use file templates or snippets to help follow consistent styles and patterns. He
 
 **[Back to top](#table-of-contents)**
 
-## Yeoman Generator
-###### [Style [Y260](#style-y260)]
-
-You can use the [HotTowel yeoman generator](http://jpapa.me/yohottowel) to create an app that serves as a starting point for Angular that follows this style guide.
-
-1. Install generator-hottowel
-
-  ```
-  npm install -g generator-hottowel
-  ```
-
-2. Create a new folder and change directory to it
-
-  ```
-  mkdir myapp
-  cd myapp
-  ```
-
-3. Run the generator
-
-  ```
-  yo hottowel helloWorld
-  ```
-
-**[Back to top](#table-of-contents)**
-
 ## Routing
 Client-side routing is important for creating a navigation flow between views and composing views that are made of many smaller templates and directives.
 
@@ -2761,7 +2625,7 @@ Client-side routing is important for creating a navigation flow between views an
 **[Back to top](#table-of-contents)**
 
 ## Task Automation
-Use [Gulp](http://gulpjs.com) or [Grunt](http://gruntjs.com) for creating automated tasks. Gulp leans to code over configuration while Grunt leans to configuration over code. I personally prefer Gulp as I feel it is easier to read and write, but both are excellent.
+Use [Gulp](http://gulpjs.com) for creating automated tasks.
 
 ###### [Style [Y400](#style-y400)]
 
