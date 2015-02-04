@@ -21,6 +21,9 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 ##Translations
 [Translations of this Angular style guide](https://github.com/johnpapa/angularjs-styleguide/tree/master/i18n) are maintained by the community and can be found here.
 
+##Templates
+Import `angular_templates.jar` to Web-/PhpStorm for simple file creation!
+
 ## Table of Contents
 
   1. [Single Responsibility](#single-responsibility)
