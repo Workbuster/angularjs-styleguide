@@ -2107,10 +2107,13 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
      */
 
     app/
-        app.module.js
-        app.config.js
         app.routes.js
+        app.config.js
+        app.module.js
         assignment/
+            assignment.routes.js
+            assignment.config.js
+            assignment.module.js
             controller/
                 assignment-applications.controller.js
                 assignment-list.controller.js
@@ -2124,6 +2127,9 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
             factory/
                 Assignment.factory.js
         assignment.add/
+            assignment.add.routes.js
+            assignment.add.config.js
+            assignment.add.module.js
             controller/
                 assignment-add.controller.js
             directive/
@@ -2131,6 +2137,9 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
             partial/
                 assignment-add.partial.js
         candidate/
+            candidate.routes.js
+            candidate.config.js
+            candidate.module.js
             controller/
                 app-candidate.controller.js
                 candidate-list.controller.js
