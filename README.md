@@ -2287,6 +2287,40 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
     // and so on
     ```
 
+### Testing Directives
+  
+  - Don't try to test the visual representation of the directive. Instead, focus on the functionality that the directive encapsulates, for instance:
+
+    Does the directive render the desired structure?
+    Do bindings in the directive work correctly?
+    Do events result in the anticipated outcome?
+    Is the directive being correctly initiated?
+
+    Setting up a directive unit test
+    ```javascript
+    describe('The myDirective directive', function() {
+      var $scope;
+      var controller;
+      var element;
+      beforeEach(function() {
+        module('app.myModule');
+        module('mock.templates');       // This makes available the templates that the karma-ng-html2js preprocessor has served to the $templateCache
+
+        inject([function($compile, $rootScope) {
+          $scope = $rootScope;
+          element = angular.element('<my-directive some-setting="true"></my-directive>');     // Create the directive element
+          $compile(element)($scope);        // Compile it
+          $scope.$digest();
+          controller = element.controller('myDirective');       //Get the directive controller if there is one
+        }]);
+      });
+
+      it('should have a controller', function() {
+        expect(controller).toBeDefined();
+      });
+    });
+    ```
+
 ### Testing Library
 ###### [Style [Y191](#style-y191)]
 
